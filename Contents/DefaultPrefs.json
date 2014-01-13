@@ -7,8 +7,9 @@
 	},
 	{
 		"id": "Valid_Ext",
-		"label": "Valid Subtitle extentions, seperated with a comma",
-		"type": "text"
+		"label": "Valid Subtitle extentions, seperated with a space",
+		"type": "text",
+		"default": ".srt .ssi"
 	}
 	
 ]
