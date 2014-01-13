@@ -1,0 +1,14 @@
+[
+	{
+		"id": "Make_Backup",
+		"label": "Create backup",
+		"type": "bool",
+		"default": "true"
+	},
+	{
+		"id": "Valid_Ext",
+		"label": "Valid Subtitle extentions, seperated with a comma",
+		"type": "text"
+	}
+	
+]
