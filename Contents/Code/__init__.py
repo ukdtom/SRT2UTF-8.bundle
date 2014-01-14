@@ -4,7 +4,7 @@
 
 
 ######################################### Global Variables #########################################
-sVersion = '0.0.1.0'
+sVersion = '0.0.1.1'
 sTitle = 'SRT2UTF-8'
 
 ######################################### Imports ##################################################
@@ -86,6 +86,7 @@ def GetEnc(myFile):
 		mySub = f.read()
 		soup = BeautifulSoup(mySub)
 		soup.contents[0]
+		f.close()
 		Log.Debug('BeutifulSoap reports encoding as %s' %(soup.originalEncoding))
 		if soup.originalEncoding != 'utf-8':
 			# Not utf-8, so let's make a backup
@@ -110,15 +111,28 @@ def ValidatePrefs():
 ########################################## Convert file to utf-8 ###################################
 def ConvertFile(myFile, enc):
 	Log.Debug('Converting file %s with an encoding of %s' %(myFile, enc))
-	with codecs.open(myFile, "r", enc) as sourceFile:
-    		with codecs.open(myFile + '.tmpPlex', "w", "utf-8") as targetFile:
-        		while True:
-            			contents = sourceFile.read()
-				if not contents:
-					break
-				targetFile.write(contents)
-	# Remove the origen file
-	os.remove(myFile)
-	# Name tmp file as the origen
-	os.rename(myFile + '.tmpPlex', myFile)
+	
+# This works in Linux and QNAP, but not in Windows. Plex bug I believe. - Chris
+#	with codecs.open(myFile, "r", enc) as sourceFile:
+#		with codecs.open(myFile + '.tmpPlex', mode="w", encoding="utf-8") as targetFile:
+#			while True:
+#				contents = sourceFile.read()
+#				if not contents:
+#					break
+#				targetFile.write(contents)
 
+	sourceFile = io.open(myFile, 'r', encoding=enc)
+	targetFile = io.open(myFile + '.tmpPlex', 'w', encoding="utf-8")
+	while True:
+		contents = sourceFile.read()
+		if not contents:
+			break
+		targetFile.write(contents)
+	sourceFile.close()
+	targetFile.close()
+	
+	# Remove the original file
+	os.remove(myFile)
+	# Name tmp file as the original file name
+	os.rename(myFile + '.tmpPlex', myFile)
+	Log.Debug('Successfully converted %s to utf-8' %(myFile))
