@@ -111,16 +111,6 @@ def ValidatePrefs():
 ########################################## Convert file to utf-8 ###################################
 def ConvertFile(myFile, enc):
 	Log.Debug('Converting file %s with an encoding of %s' %(myFile, enc))
-	
-# This works in Linux and QNAP, but not in Windows. Plex bug I believe. - Chris
-#	with codecs.open(myFile, "r", enc) as sourceFile:
-#		with codecs.open(myFile + '.tmpPlex', mode="w", encoding="utf-8") as targetFile:
-#			while True:
-#				contents = sourceFile.read()
-#				if not contents:
-#					break
-#				targetFile.write(contents)
-
 	sourceFile = io.open(myFile, 'r', encoding=enc)
 	targetFile = io.open(myFile + '.tmpPlex', 'w', encoding="utf-8")
 	while True:
