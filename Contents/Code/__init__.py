@@ -87,7 +87,7 @@ def GetEnc(myFile):
 		soup = BeautifulSoup(mySub)
 		soup.contents[0]
 		f.close()
-		Log.Debug('BeutifulSoap reports encoding as %s' %(soup.originalEncoding))
+		Log.Debug('BeautifulSoup reports encoding as %s' %(soup.originalEncoding))
 		if soup.originalEncoding != 'utf-8':
 			# Not utf-8, so let's make a backup
 			MakeBackup(myFile)
