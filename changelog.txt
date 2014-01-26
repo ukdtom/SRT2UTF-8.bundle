@@ -1,0 +1,8 @@
+v0.0.1.2
+- Changed backup, so it no longer overrides an existing backup-file, bur instead add a counter to the backup filename
+- Srt2UTF-8 will now check the filename for language code as well, currently only 2 letter country codes though, and use that as a master for detection of encoding
+- If a convertion fails, and backup is enabled, Srt2UTF-8 will now automaticly revert.
+
+v0.0.1.1
+- First public version
+
