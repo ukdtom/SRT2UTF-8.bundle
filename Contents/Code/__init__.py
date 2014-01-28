@@ -9,7 +9,7 @@
 #
 
 ######################################### Global Variables #########################################
-sVersion = '0.0.1.3'
+sVersion = '0.0.1.4'
 sTitle = 'SRT2UTF-8'
 
 ######################################### Imports ##################################################
@@ -21,8 +21,7 @@ import sys
 from BeautifulSoup import BeautifulSoup
 import fnmatch
 import CP_Windows_ISO
-import langCodeTwo
-import langCodeTree
+import langCode
 
 ######################################## Start of plugin ###########################################
 def Start():
@@ -92,9 +91,9 @@ def FindLanguage(srtFile):
 	# Get language code if present, or else return 'und'
 	sFileName, sFileExtension = os.path.splitext(sFileName)
 	myLang = sFileExtension[1:].lower()
-	if (myLang in langCodeTwo.langCodeTwo):
+	if (myLang in langCode.langCodeTwo):
 		return myLang
-	elif (myLang in langCodeTree.langCodeTree):
+	elif (myLang in langCode.langCodeTree):
 		return myLang
 	else:
 		return 'und'
@@ -111,6 +110,8 @@ def GetEnc(myFile, lang):
 		f.close()
 		sCurrentEnc = soup.originalEncoding
 		Log.Debug('BeautifulSoup reports encoding as %s' %(sCurrentEnc))
+		if sCurrentEnc == 'ascii':
+			return
 		if sCurrentEnc != 'utf-8':
 			# Not utf-8, so let's make a backup
 			MakeBackup(myFile)
