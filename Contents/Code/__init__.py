@@ -4,12 +4,12 @@
 # Code contributions made by srazer, also a Plex community member
 #
 
-# TODO: Check ISO language codepages as well
+# TODO: 
 # Check for pref. set language
 #
 
 ######################################### Global Variables #########################################
-sVersion = '0.0.1.2'
+sVersion = '0.0.1.3'
 sTitle = 'SRT2UTF-8'
 
 ######################################### Imports ##################################################
@@ -20,8 +20,7 @@ import codecs
 import sys
 from BeautifulSoup import BeautifulSoup
 import fnmatch
-import CP_Windows
-import CP_ISO
+import CP_Windows_ISO
 import langCodeTwo
 import langCodeTree
 
@@ -121,11 +120,31 @@ def GetEnc(myFile, lang):
 				# Was it a windows codepage?
 				if 'windows-' in sCurrentEnc:
 					# Does result so far match our list?
-					if sCurrentEnc == CP_Windows.cpWindows[lang]:
+					if sCurrentEnc == CP_Windows_ISO.cpWindows[lang]:
 						Log.Debug('Origen CP is %s' %(sCurrentEnc))
 					else:
-						sCurrentEnc = CP_Windows.cpWindows[lang]
-						Log.Debug('Overriding detection due to languagecode in filename, and setting encoding to %s' %(sCurrentEnc))			
+						if CP_Windows_ISO.cpWindows[lang] != "Unknown":
+							sCurrentEnc = CP_Windows_ISO.cpWindows[lang]
+							Log.Debug('Overriding detection due to languagecode in filename, and setting encoding to %s' %(sCurrentEnc))
+						else:
+							Log.Debug('******* SNIFF *******')
+							Log.Debug("We don't know the default encodings for %s" %(lang))
+							Log.Debug('If you know this, then please go here: https://forums.plex.tv/index.php/topic/94864-rel-str2utf-8/ and tell me')
+
+				else:
+					# We got ISO
+					# Does result so far match our list?
+					if sCurrentEnc == CP_Windows_ISO.cpISO[lang]:
+						Log.Debug('Origen CP is %s' %(sCurrentEnc))
+					else:
+						if CP_Windows_ISO.cpWindows[lang] != "Unknown":
+							sCurrentEnc = CP_Windows_ISO.cpISO[lang]
+							Log.Debug('Overriding detection due to languagecode in filename, and setting encoding to %s' %(sCurrentEnc))
+						else:
+							Log.Debug('******* SNIFF *******')
+							Log.Debug("We don't know the default encodings for %s" %(lang))
+							Log.Debug('If you know this, then please go here: https://forums.plex.tv/index.php/topic/94864-rel-str2utf-8/ and tell me')
+
 			ConvertFile(myFile, sCurrentEnc)
 		return (soup.originalEncoding == 'utf-8')
 	except UnicodeDecodeError:
@@ -151,7 +170,11 @@ def RevertBackup(file):
 		shutil.copyfile(sTarget, file)
 		# Cleanup bad tmp file
 		if os.path.isfile(file + '.tmpPlex'):
-			os.remove(file + '.tmpPlex')			
+			os.remove(file + '.tmpPlex')
+		# Remove unneeded backup
+		if os.path.isfile(sTarget):
+			os.remove(sTarget)
+		
 	else:
 		Log.Critical('**** Something went wrong here, but backup has been disabled....SIGH.....Your fault, not mine!!!!! ****')			
 
