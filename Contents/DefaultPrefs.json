@@ -10,6 +10,30 @@
 		"label": "Valid Subtitle extentions, seperated with a space",
 		"type": "text",
 		"default": ".srt .ssi"
+	},
+	{
+		"id": "PreferredCP",
+		"label": "Preferred Country",
+		"type": "enum",
+		"values" : ["None","Abkhazian","Afar","Afrikaans","Akan","Albanian","Amharic","Arabic","Aragonese","Armenian","Assamese","Avaric","Avestan","Aymara","Azerbaijani",
+	"Bambara","Bashkir","Basque","Belarusian","Bengali","Bihari languages","Bislama","Bokmål, Norwegian","Bosnian","Breton","Bulgarian","Burmese",
+	"Castilian","Catalan","Central Khmer","Chamorro","Chechen","Chewa","Chichewa","Chinese","Chuang","Church Slavic","Church Slavonic","Chuvash",
+	"Cornish","Corsican","Cree","Croatian","Czech","Danish","Dhivehi","Divehi","Dutch","Dzongkha","English","Esperanto","Estonian","Ewe","Faroese","Fijian",
+	"Finnish","Flemish","French","Fulah","Gaelic","Galician","Ganda","Georgian","German","Gikuyu","Greek, Modern (1453-)","Greenlandic","Gujarati",
+	"Haitian","Haitian Creole","Hausa","Hebrew","Herero","Hindi","Hiri Motu","Hungarian","Icelandic","Ido","Igbo","Indonesian",
+	"Interlingua (International Auxiliary Language Association)","Interlingue","Inuktitut","Inupiaq","Irish","Italian","Japanese","Javanese",
+	"Kalaallisut","Kannada","Kanuri","Kashmiri","Kazakh","Kikuyu","Kinyarwanda","Kirghiz","Komi","Kongo","Korean","Kuanyama","Kurdish","Kwanyama",
+	"Kyrgyz","Lao","Latin","Latvian","Letzeburgesch","Limburgan","Limburger","Limburgish","Lithuanian","Luba-Katanga","Luxembourgish","Macedonian",
+	"Malagasy","Malay","Malayalam","Maldivian","Maltese","Manx","Maori","Marathi","Marshallese","Moldavian","Moldovan","Mongolian","Nauru",
+	"Navaho","Navajo","Ndebele, North","Ndebele, South","Ndonga","Nepali","North Ndebele","Northern Sami","Norwegian","Norwegian Bokmål",
+	"Norwegian Nynorsk","Nuosu","Nyanja","Nynorsk, Norwegian","Occidental","Occitan (post 1500)","Ojibwa","Old Bulgarian","Old Church Slavonic",
+	"Old Slavonic","Oriya","Oromo","Ossetian","Ossetic","Pali","Panjabi","Pashto","Persian","Polish","Portuguese","Punjabi","Pushto","Quechua",
+	"Romanian","Romansh","Rundi","Russian","Samoan","Sango","Sanskrit","Sardinian","Scottish Gaelic","Serbian","Shona","Sichuan Yi","Sindhi",
+	"Sinhala","Sinhalese","Slovak","Slovenian","Somali","Sotho, Southern","South Ndebele","Spanish","Sundanese","Swahili","Swati","Swedish",
+	"Tagalog","Tahitian","Tajik","Tamil","Tatar","Telugu","Thai","Tibetan","Tigrinya","Tonga (Tonga Islands)","Tsonga","Tswana","Turkish",
+	"Turkmen","Twi","Uighur","Ukrainian","Urdu","Uyghur","Uzbek","Valencian","Venda","Vietnamese","Volapük","Walloon","Welsh","Western Frisian",
+	"Wolof","Xhosa","Yiddish","Yoruba","Zhuang","Zulu"],
+		"default": "None"
 	}
 	
 ]
