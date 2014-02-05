@@ -1,3 +1,8 @@
+v0.0.1.5
+- Changed encoding detection to a new engine, that supports charsets then is not western much better
+- Did a lot of code cleanup as well
+- Made debug log a lot more condensed
+
 v0.0.1.4
 - Will now abort is codepage is detected as ascii
 - Merged languagecodes into one file
