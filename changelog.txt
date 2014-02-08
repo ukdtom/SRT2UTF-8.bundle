@@ -1,3 +1,10 @@
+v0.0.1.6
+- Added support for Turkish language
+- Added support for Chinese Simplified
+- Added support for Norwegian Bookmal
+
+Known Issue, sadly still no support for Chinese Traditional
+
 v0.0.1.5
 - Changed encoding detection to a new engine, that supports charsets then is not western much better
 - Did a lot of code cleanup as well

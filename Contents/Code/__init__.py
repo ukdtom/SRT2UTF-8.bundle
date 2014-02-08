@@ -10,7 +10,7 @@
 #
 
 ######################################### Global Variables #########################################
-PLUGIN_VERSION = '0.0.1.5'
+PLUGIN_VERSION = '0.0.1.6'
 
 ######################################### Imports ##################################################
 import os
@@ -22,8 +22,6 @@ from BeautifulSoup import BeautifulSoup
 import fnmatch
 
 import CP_Windows_ISO
-#import langCode
-import code2lang
 
 import charedSup
 from chared import __version__ as VERSION
@@ -34,7 +32,7 @@ from chared.detector import list_models, get_model_path, EncodingDetector
 def Start():
 	Log.Info(L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION))
 	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
-
+	
 ####################################### Movies Plug-In #############################################
 class srt2utf8AgentMovies(Agent.Movies):
 	name = L('Srt2Utf-8') + ' (Movies)'
@@ -204,7 +202,7 @@ def GetUsrEncPref():
 def sGetFileLang(sMyFile):
 	# Get the filename
 	sFileName, sFileExtension = os.path.splitext(sMyFile)
-	# Get language code if present, or else return 'und'
+	# Get language code if present, or else return 'xx'
 	sFileName, sFileExtension = os.path.splitext(sFileName)
 	myLang = sFileExtension[1:].lower()
 	return Locale.Language.Match(myLang)
