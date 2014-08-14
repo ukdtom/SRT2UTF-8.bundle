@@ -10,7 +10,7 @@
 #
 
 ######################################### Global Variables #########################################
-PLUGIN_VERSION = '0.0.1.6'
+PLUGIN_VERSION = '0.0.1.7'
 
 ######################################### Imports ##################################################
 import os
@@ -31,7 +31,7 @@ from chared.detector import list_models, get_model_path, EncodingDetector
 ######################################## Start of plugin ###########################################
 def Start():
 	Log.Info(L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION))
-	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
+#	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
 	
 ####################################### Movies Plug-In #############################################
 class srt2utf8AgentMovies(Agent.Movies):
@@ -71,12 +71,13 @@ def GetFiles(part):
 	# Filename of media	
 	sFile = part.file.decode('utf-8')
 	# Directory where it's located
-	sMyDir = os.path.dirname(sFile)
+	sMyDir = os.path.dirname(sFile).decode('utf-8')
 	Log.Debug('File trigger is "%s"' %(sFile))
 	for root, dirs, files in os.walk(sMyDir, topdown=False):
 		# Walk the directory
 		for sSrtName in files:
 			# Grap all files, and check if it's a valid subtitle file
+			sSrtName = sSrtName.decode('utf-8')
 			sTest = sIsValid(sMyDir, sFile, sSrtName)
 			if sTest != 'null':
 				# We got a valid subtitle file here
@@ -229,16 +230,23 @@ def bIsUTF_8(sMyFile):
 # Returns a filename of a valid subtitle file, or 'null' if it's a no-go
 def sIsValid(sMyDir, sMediaFilename, sSubtitleFilename):
 	try:
+		Log.Debug('Checking if file %s is valid' %(sSubtitleFilename))
 		# Valid list of subtitle ext.	
 		lValidList = Prefs['Valid_Ext'].upper().split()
-		# Get the ext of the subtFile
+		# Get the ext of the SubtitleFile
 		sFileName, sFileExtension = os.path.splitext(sSubtitleFilename)
 		# Is this a valid subtitle file?
 		if (sFileExtension.upper() in lValidList):
 			#It's a subtitle file, but is it for the mediafile?
 			# Get filename without ext. of the media
 			myMedia, myMediaExt = os.path.splitext(os.path.basename(sMediaFilename))
-			if fnmatch.fnmatch(sSubtitleFilename, myMedia + '*'):
+			# Get the ext of the SubtitleFile
+			sSRTName2, sFileExtension = os.path.splitext(sFileName)
+			if sFileName == myMedia:
+				Log.Debug('Found a valid subtitle file named "%s"' %(sSubtitleFilename))
+				sSource = sMyDir + '/' + sSubtitleFilename
+				return sSource
+			elif myMedia == sSRTName2:
 				Log.Debug('Found a valid subtitle file named "%s"' %(sSubtitleFilename))
 				sSource = sMyDir + '/' + sSubtitleFilename
 				return sSource
@@ -247,6 +255,7 @@ def sIsValid(sMyDir, sMediaFilename, sSubtitleFilename):
 		else:
 			return 'null'
 	except:
+		Log.Critical('An exception happened in function sIsValid in dir %s for media %s and file %s' %(sMyDir, sMediaFilename, sSubtitleFilename))
 		return 'null'
 
 ######################################## Make the backup, if enabled ###############################

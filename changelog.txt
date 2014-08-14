@@ -1,3 +1,6 @@
+v0.0.1.7
+- Fixed an issue, where SRT2UTF-8 would not pick-up sidecar srt's, if they contained a square bracket in their filename
+
 v0.0.1.6
 - Added support for Turkish language
 - Added support for Chinese Simplified
