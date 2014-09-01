@@ -1,3 +1,6 @@
+v0.0.1.8
+- Fixed an issue, where SRT2UTF-8 would convert files already encoded into utf-8. Didn't harm, but sloved down the process
+
 v0.0.1.7
 - Fixed an issue, where SRT2UTF-8 would not pick-up sidecar srt's, if they contained a square bracket in their filename
 

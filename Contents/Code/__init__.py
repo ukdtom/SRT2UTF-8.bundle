@@ -10,7 +10,7 @@
 #
 
 ######################################### Global Variables #########################################
-PLUGIN_VERSION = '0.0.1.7'
+PLUGIN_VERSION = '0.0.1.8'
 
 ######################################### Imports ##################################################
 import os
@@ -31,7 +31,7 @@ from chared.detector import list_models, get_model_path, EncodingDetector
 ######################################## Start of plugin ###########################################
 def Start():
 	Log.Info(L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION))
-#	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
+	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
 	
 ####################################### Movies Plug-In #############################################
 class srt2utf8AgentMovies(Agent.Movies):
@@ -82,8 +82,6 @@ def GetFiles(part):
 			if sTest != 'null':
 				# We got a valid subtitle file here
 				if not bIsUTF_8(sTest):
-					# Make a backup
-					MakeBackup(sTest)
 					# Got a language code in the file-name?
 					sMyLang = sGetFileLang(sTest)			
 					if sMyLang == 'xx':
@@ -99,7 +97,12 @@ def GetFiles(part):
 						Log.Debug('Chared is not supported, reverting to Beautifull Soap')
 						sMyEnc = FindEncBS(sTest, sMyLang)
 					# Convert the darn thing
-					ConvertFile(sTest, sMyEnc)
+					if (sMyEnc != 'utf_8'):
+						# Make a backup
+						MakeBackup(sTest)
+						ConvertFile(sTest, sMyEnc)
+					else:
+						Log.Debug('The subtitle file named : %s is already encoded in utf-8, so skipping' %(sTest))
 				else:
 					Log.Debug('The subtitle file named : %s is already encoded in utf-8, so skipping' %(sTest))
 
@@ -107,6 +110,7 @@ def GetFiles(part):
 def ConvertFile(myFile, enc):
 	sourceFile = io.open(myFile, 'r', encoding=enc)
 	targetFile = io.open(myFile + '.tmpPlex', 'w', encoding="utf-8")
+	Log.Debug("Converting file: %s with the encoding of %s into utf-8" %(myFile, enc))
 	while True:
 		contents = sourceFile.read()
 		if not contents:
