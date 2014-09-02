@@ -1,3 +1,7 @@
+v0.0.1.9
+- Improved backup rutine
+- Changed algorithm, so we continue in case of an exception
+
 v0.0.1.8
 - Fixed an issue, where SRT2UTF-8 would convert files already encoded into utf-8. Didn't harm, but sloved down the process
 
