@@ -97,10 +97,21 @@ def GetFiles(part):
 						Log.Debug('Chared is not supported, reverting to Beautifull Soap')
 						sMyEnc = FindEncBS(sTest, sMyLang)
 					# Convert the darn thing
-					if (sMyEnc != 'utf_8'):
+					if sMyEnc not in ('utf_8', 'utf-8'):
 						# Make a backup
-						MakeBackup(sTest)
-						ConvertFile(sTest, sMyEnc)
+						try:
+							MakeBackup(sTest)
+						except:
+							Log.Exception('Something went wrong creating a backup, file will not be converted!!! Check file permissions?')
+						else:
+							try:
+								ConvertFile(sTest, sMyEnc)
+							except:
+								Log.Exception('Something went wrong converting!!! Check file permissions?')
+								try:
+									RevertBackup(sTest)
+								except:
+									Log.Exception("Can't even revert the backup?!? I give up...")
 					else:
 						Log.Debug('The subtitle file named : %s is already encoded in utf-8, so skipping' %(sTest))
 				else:
@@ -108,16 +119,9 @@ def GetFiles(part):
 
 ########################################## Convert file to utf-8 ###################################
 def ConvertFile(myFile, enc):
-	sourceFile = io.open(myFile, 'r', encoding=enc)
-	targetFile = io.open(myFile + '.tmpPlex', 'w', encoding="utf-8")
 	Log.Debug("Converting file: %s with the encoding of %s into utf-8" %(myFile, enc))
-	while True:
-		contents = sourceFile.read()
-		if not contents:
-			break
-		targetFile.write(contents)
-	sourceFile.close()
-	targetFile.close()
+	with io.open(myFile, 'r', encoding=enc) as sourceFile, io.open(myFile + '.tmpPlex', 'w', encoding="utf-8") as targetFile:
+		targetFile.write(sourceFile.readall())
 	# Remove the original file
 	os.remove(myFile)
 	# Name tmp file as the original file name
@@ -259,7 +263,7 @@ def sIsValid(sMyDir, sMediaFilename, sSubtitleFilename):
 		else:
 			return 'null'
 	except:
-		Log.Critical('An exception happened in function sIsValid in dir %s for media %s and file %s' %(sMyDir, sMediaFilename, sSubtitleFilename))
+		Log.Exception('An exception happened in function sIsValid in dir %s for media %s and file %s' %(sMyDir, sMediaFilename, sSubtitleFilename))
 		return 'null'
 
 ######################################## Make the backup, if enabled ###############################
