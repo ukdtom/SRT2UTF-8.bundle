@@ -3,6 +3,7 @@
 #
 # Code contributions made by the following:
 #	srazer, also a Plex community member
+# jmichiel, also a Plex community member
 #
 
 # TODO: 
@@ -31,7 +32,7 @@ from chared.detector import list_models, get_model_path, EncodingDetector
 ######################################## Start of plugin ###########################################
 def Start():
 	Log.Info(L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION))
-	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
+#	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
 	
 ####################################### Movies Plug-In #############################################
 class srt2utf8AgentMovies(Agent.Movies):
