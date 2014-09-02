@@ -121,7 +121,7 @@ def GetFiles(part):
 def ConvertFile(myFile, enc):
 	Log.Debug("Converting file: %s with the encoding of %s into utf-8" %(myFile, enc))
 	with io.open(myFile, 'r', encoding=enc) as sourceFile, io.open(myFile + '.tmpPlex', 'w', encoding="utf-8") as targetFile:
-		targetFile.write(sourceFile.readall())
+		targetFile.write(sourceFile.read())
 	# Remove the original file
 	os.remove(myFile)
 	# Name tmp file as the original file name
@@ -289,13 +289,13 @@ def RevertBackup(file):
 		Log.Critical('**** Reverting from backup, something went wrong here ****')	
 		# Look back of a maximum of 250 backup's
 		iCounter = 250
-		sTarget = file + '.' + str(iCounter) + '.' + Srt2Utf-8
+		sTarget = file + '.' + str(iCounter) + '.' + 'Srt2Utf-8'
 		# Make sure we don't override an already existing backup
 		while not os.path.isfile(sTarget):
 			if iCounter == 0:
-				sTarget = file + '.' + Srt2Utf-8
+				sTarget = file + '.' + 'Srt2Utf-8'
 			else:				
-				sTarget = file + '.' + str(iCounter) + '.' + Srt2Utf-8
+				sTarget = file + '.' + str(iCounter) + '.' + 'Srt2Utf-8'
 			iCounter = iCounter -1
 		Log.Debug('Reverting from backup of %s' %(sTarget))
 		shutil.copyfile(sTarget, file)
