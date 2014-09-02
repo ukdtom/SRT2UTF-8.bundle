@@ -10,7 +10,7 @@
 #
 
 ######################################### Global Variables #########################################
-PLUGIN_VERSION = '0.0.1.7'
+PLUGIN_VERSION = '0.0.1.8'
 
 ######################################### Imports ##################################################
 import os
@@ -31,7 +31,7 @@ from chared.detector import list_models, get_model_path, EncodingDetector
 ######################################## Start of plugin ###########################################
 def Start():
 	Log.Info(L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION))
-#	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
+	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
 	
 ####################################### Movies Plug-In #############################################
 class srt2utf8AgentMovies(Agent.Movies):
@@ -82,8 +82,6 @@ def GetFiles(part):
 			if sTest != 'null':
 				# We got a valid subtitle file here
 				if not bIsUTF_8(sTest):
-					# Make a backup
-					MakeBackup(sTest)
 					# Got a language code in the file-name?
 					sMyLang = sGetFileLang(sTest)			
 					if sMyLang == 'xx':
@@ -99,21 +97,31 @@ def GetFiles(part):
 						Log.Debug('Chared is not supported, reverting to Beautifull Soap')
 						sMyEnc = FindEncBS(sTest, sMyLang)
 					# Convert the darn thing
-					ConvertFile(sTest, sMyEnc)
+					if sMyEnc not in ('utf_8', 'utf-8'):
+						# Make a backup
+						try:
+							MakeBackup(sTest)
+						except:
+							Log.Exception('Something went wrong creating a backup, file will not be converted!!! Check file permissions?')
+						else:
+							try:
+								ConvertFile(sTest, sMyEnc)
+							except:
+								Log.Exception('Something went wrong converting!!! Check file permissions?')
+								try:
+									RevertBackup(sTest)
+								except:
+									Log.Exception("Can't even revert the backup?!? I give up...")
+					else:
+						Log.Debug('The subtitle file named : %s is already encoded in utf-8, so skipping' %(sTest))
 				else:
 					Log.Debug('The subtitle file named : %s is already encoded in utf-8, so skipping' %(sTest))
 
 ########################################## Convert file to utf-8 ###################################
 def ConvertFile(myFile, enc):
-	sourceFile = io.open(myFile, 'r', encoding=enc)
-	targetFile = io.open(myFile + '.tmpPlex', 'w', encoding="utf-8")
-	while True:
-		contents = sourceFile.read()
-		if not contents:
-			break
-		targetFile.write(contents)
-	sourceFile.close()
-	targetFile.close()
+	Log.Debug("Converting file: %s with the encoding of %s into utf-8" %(myFile, enc))
+	with io.open(myFile, 'r', encoding=enc) as sourceFile, io.open(myFile + '.tmpPlex', 'w', encoding="utf-8") as targetFile:
+		targetFile.write(sourceFile.read())
 	# Remove the original file
 	os.remove(myFile)
 	# Name tmp file as the original file name
@@ -255,7 +263,7 @@ def sIsValid(sMyDir, sMediaFilename, sSubtitleFilename):
 		else:
 			return 'null'
 	except:
-		Log.Critical('An exception happened in function sIsValid in dir %s for media %s and file %s' %(sMyDir, sMediaFilename, sSubtitleFilename))
+		Log.Exception('An exception happened in function sIsValid in dir %s for media %s and file %s' %(sMyDir, sMediaFilename, sSubtitleFilename))
 		return 'null'
 
 ######################################## Make the backup, if enabled ###############################
@@ -281,13 +289,13 @@ def RevertBackup(file):
 		Log.Critical('**** Reverting from backup, something went wrong here ****')	
 		# Look back of a maximum of 250 backup's
 		iCounter = 250
-		sTarget = file + '.' + str(iCounter) + '.' + Srt2Utf-8
+		sTarget = file + '.' + str(iCounter) + '.' + 'Srt2Utf-8'
 		# Make sure we don't override an already existing backup
 		while not os.path.isfile(sTarget):
 			if iCounter == 0:
-				sTarget = file + '.' + Srt2Utf-8
+				sTarget = file + '.' + 'Srt2Utf-8'
 			else:				
-				sTarget = file + '.' + str(iCounter) + '.' + Srt2Utf-8
+				sTarget = file + '.' + str(iCounter) + '.' + 'Srt2Utf-8'
 			iCounter = iCounter -1
 		Log.Debug('Reverting from backup of %s' %(sTarget))
 		shutil.copyfile(sTarget, file)
