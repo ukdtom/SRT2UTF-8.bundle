@@ -11,7 +11,7 @@
 #
 
 ######################################### Global Variables #########################################
-PLUGIN_VERSION = '0.0.1.9'
+PLUGIN_VERSION = '0.0.2.0 ******** DEV VERSION *********'
 
 ######################################### Imports ##################################################
 import os
@@ -21,7 +21,6 @@ import codecs
 import sys
 from BeautifulSoup import BeautifulSoup
 import fnmatch
-
 import CP_Windows_ISO
 
 import charedSup
@@ -32,7 +31,7 @@ from chared.detector import list_models, get_model_path, EncodingDetector
 ######################################## Start of plugin ###########################################
 def Start():
 	Log.Info(L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION))
-#	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
+	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
 	
 ####################################### Movies Plug-In #############################################
 class srt2utf8AgentMovies(Agent.Movies):
@@ -47,6 +46,7 @@ class srt2utf8AgentMovies(Agent.Movies):
 	def update(self, metadata, media, lang, force):
 		for i in media.items:
 			for part in i.parts:
+				GetOSSrt(part)
 				GetFiles(part)
 
 ####################################### TV-Shows Plug-In ###########################################
@@ -65,7 +65,34 @@ class srt2utf8AgentTV(Agent.TV_Shows):
 				for e in media.seasons[s].episodes:
 					for i in media.seasons[s].episodes[e].items:
 						for part in i.parts:
+							GetOSSrt(part)
 							GetFiles(part)
+
+######################################### Scan for OS srt's  ###################################
+def GetOSSrt(part):
+	#********** TESTING HERE **************
+	if Prefs['OSEnabled']:
+		sHash = part.hash
+		Log.Debug('Part Hash is %s' %(sHash))
+		# Get path to this parts OS-Srt's
+		OSDir = os.path.join(Core.app_support_path, 'Media', 'localhost', sHash[0], sHash[1:]+ '.bundle', 'Contents', 'Subtitle Contributions', 'com.plexapp.agents.opensubtitles')
+		Log.Debug('OSDir is %s' %(OSDir))
+		
+		for root, dirs, files in os.walk(OSDir, topdown=True):
+			for sDir in dirs:
+				Log.Debug('sDir is %s' %(sDir))	
+
+				print 'Ged3: ' + os.path.join(OSDir,sDir)
+
+				for root2, dirs2, files2 in os.walk(os.path.join(OSDir,sDir), topdown=False):			
+					# Walk the directory
+					for sSrtName in files2:
+		#				print 'Ged4: ' + dirs2[0]
+						print 'Ged5: ' + sSrtName
+
+						Log.Debug('********** %s' %(os.path.join(sDir ,sSrtName)))			
+
+
 
 ######################################### Get files in directory ###################################
 def GetFiles(part):
@@ -73,7 +100,7 @@ def GetFiles(part):
 	sFile = part.file.decode('utf-8')
 	# Directory where it's located
 	sMyDir = os.path.dirname(sFile).decode('utf-8')
-	Log.Debug('File trigger is "%s"' %(sFile))
+	Log.Debug('SideCar File trigger is "%s"' %(sFile))
 	for root, dirs, files in os.walk(sMyDir, topdown=False):
 		# Walk the directory
 		for sSrtName in files:
@@ -159,7 +186,6 @@ def FindEncBS(myFile, lang):
 							Log.Debug('******* SNIFF *******')
 							Log.Debug("We don't know the default encodings for %s" %(lang))
 							Log.Debug('If you know this, then please go here: https://forums.plex.tv/index.php/topic/94864-rel-str2utf-8/ and tell me')
-
 				else:
 					# We got ISO
 					# Does result so far match our list?
@@ -173,7 +199,6 @@ def FindEncBS(myFile, lang):
 							Log.Debug('******* SNIFF *******')
 							Log.Debug("We don't know the default encodings for %s" %(lang))
 							Log.Debug('If you know this, then please go here: https://forums.plex.tv/index.php/topic/94864-rel-str2utf-8/ and tell me')
-
 		return sCurrentEnc
 	except UnicodeDecodeError:
 		Log.Debug('got unicode error with %s' %(myFile))
@@ -281,7 +306,6 @@ def MakeBackup(file):
 
 ######################################## Dummy to avoid bad logging ################################
 def ValidatePrefs():
-	print Prefs['PreferredCP'] + ': ' + Locale.Language.Match(Prefs['PreferredCP'])
 	return
 
 ######################################## Revert the backup, if enabled #############################
