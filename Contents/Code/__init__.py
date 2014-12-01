@@ -11,7 +11,7 @@
 #
 
 ######################################### Global Variables #########################################
-PLUGIN_VERSION = '0.0.2.0 ******** DEV VERSION *********'
+PLUGIN_VERSION = '0.0.2.0B ******** DEV VERSION *********'
 
 ######################################### Imports ##################################################
 import os
@@ -32,6 +32,7 @@ from chared.detector import list_models, get_model_path, EncodingDetector
 def Start():
 	Log.Info(L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION))
 	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
+	print("********  Started on %s  **********" %(Platform.OS))
 	
 ####################################### Movies Plug-In #############################################
 class srt2utf8AgentMovies(Agent.Movies):
@@ -67,7 +68,7 @@ class srt2utf8AgentTV(Agent.TV_Shows):
 				for e in media.seasons[s].episodes:
 					for i in media.seasons[s].episodes[e].items:
 						for part in i.parts:
-# NOT YET TESTED FOR TV-SHOWS							GetOSSrt(part)
+							GetOSSrt(part)
 							GetFiles(part)
 
 ######################################### Scan for OS srt's  ###################################
