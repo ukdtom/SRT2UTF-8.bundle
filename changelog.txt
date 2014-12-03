@@ -1,3 +1,7 @@
+v0.0.2.0
+-	Added support for OpenSubtitles Agent
+	(Do make sure, that this plug-in is the latest in the agent order)
+
 v0.0.1.9
 - Improved backup rutine
 - Changed algorithm, so we continue in case of an exception
