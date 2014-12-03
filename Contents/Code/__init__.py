@@ -11,7 +11,7 @@
 #
 
 ######################################### Global Variables #########################################
-PLUGIN_VERSION = '0.0.1.9'
+PLUGIN_VERSION = '0.0.2.0'
 
 ######################################### Imports ##################################################
 import os
@@ -21,7 +21,6 @@ import codecs
 import sys
 from BeautifulSoup import BeautifulSoup
 import fnmatch
-
 import CP_Windows_ISO
 
 import charedSup
@@ -31,8 +30,9 @@ from chared.detector import list_models, get_model_path, EncodingDetector
 
 ######################################## Start of plugin ###########################################
 def Start():
-	Log.Info(L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION))
+	Log.Info(L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s on %s' %(PLUGIN_VERSION, Platform.OS))
 #	print L('Starting') + ' %s ' %(L('Srt2Utf-8')) + L('with a version of') + ' %s' %(PLUGIN_VERSION)
+#	print("********  Started on %s  **********" %(Platform.OS))
 	
 ####################################### Movies Plug-In #############################################
 class srt2utf8AgentMovies(Agent.Movies):
@@ -47,6 +47,9 @@ class srt2utf8AgentMovies(Agent.Movies):
 	def update(self, metadata, media, lang, force):
 		for i in media.items:
 			for part in i.parts:
+				# Get OpenSubtitles SRT's
+				GetOSSrt(part)
+				# Get SideCars
 				GetFiles(part)
 
 ####################################### TV-Shows Plug-In ###########################################
@@ -65,7 +68,65 @@ class srt2utf8AgentTV(Agent.TV_Shows):
 				for e in media.seasons[s].episodes:
 					for i in media.seasons[s].episodes[e].items:
 						for part in i.parts:
+							GetOSSrt(part)
 							GetFiles(part)
+
+######################################### Scan for OS srt's  ###################################
+def GetOSSrt(part):
+	if Prefs['OSEnabled']:
+		sHash = part.hash
+		Log.Debug('Part Hash is %s' %(sHash))
+		# Get path to this parts OS-Srt's
+		OSDir = os.path.join(Core.app_support_path, 'Media', 'localhost', sHash[0], sHash[1:]+ '.bundle', 'Contents', 'Subtitle Contributions', 'com.plexapp.agents.opensubtitles')
+		for root, dirs, files in os.walk(OSDir, topdown=True):
+			for langCode in dirs:
+				for root2, dirs2, files2 in os.walk(os.path.join(OSDir,langCode), topdown=False):			
+					# Walk the directory
+					for sSrtName in files2:
+						sMySrtFile = os.path.join(OSDir, langCode ,sSrtName)
+
+						# Get the ext of the SubtitleFile
+						sFileName, sFileExtension = os.path.splitext(sSrtName)
+						# Is this a backup file?
+						if sFileExtension != '.Srt2Utf-8':
+							# Nope, so go ahead
+							Log.Debug('Checking file: %s' %(sMySrtFile))
+							if not bIsUTF_8(sMySrtFile):
+								Log.Debug('****** File is not UTF-8...Need to fix it *******')
+								FixFile(sMySrtFile, langCode)
+							else:
+								Log.Debug('File is okay')			
+
+
+######################################### Fix the file ###################################
+def FixFile(sFile, sMyLang):
+	try:
+		# Chared supported
+		sModel = charedSup.CharedSupported[sMyLang]
+		if sModel != 'und':
+			Log.Debug('Chared is supported for this language')
+			sMyEnc = FindEncChared(sFile, sModel)
+	except:
+		Log.Debug('Chared is not supported, reverting to Beautifull Soap')
+		sMyEnc = FindEncBS(sFile, sMyLang)
+	# Convert the darn thing
+	if sMyEnc not in ('utf_8', 'utf-8'):
+		# Make a backup
+		try:
+			MakeBackup(sFile)
+		except:
+			Log.Exception('Something went wrong creating a backup, file will not be converted!!! Check file permissions?')
+		else:
+			try:
+				ConvertFile(sFile, sMyEnc)
+			except:
+				Log.Exception('Something went wrong converting!!! Check file permissions?')
+				try:
+					RevertBackup(sFile)
+				except:
+					Log.Exception("Can't even revert the backup?!? I give up...")
+	else:
+		Log.Debug('The subtitle file named : %s is already encoded in utf-8, so skipping' %(sFile))
 
 ######################################### Get files in directory ###################################
 def GetFiles(part):
@@ -73,7 +134,7 @@ def GetFiles(part):
 	sFile = part.file.decode('utf-8')
 	# Directory where it's located
 	sMyDir = os.path.dirname(sFile).decode('utf-8')
-	Log.Debug('File trigger is "%s"' %(sFile))
+	Log.Debug('SideCar File trigger is "%s"' %(sFile))
 	for root, dirs, files in os.walk(sMyDir, topdown=False):
 		# Walk the directory
 		for sSrtName in files:
@@ -87,34 +148,11 @@ def GetFiles(part):
 					sMyLang = sGetFileLang(sTest)			
 					if sMyLang == 'xx':
 						sMyLang = GetUsrEncPref()
-						sMyLang = Locale.Language.Match(sMyLang)					
-					try:
-						# Chared supported
-						sModel = charedSup.CharedSupported[sMyLang]
-						if sModel != 'und':
-							Log.Debug('Chared is supported for this language')
-							sMyEnc = FindEncChared(sTest, sModel)
-					except:
-						Log.Debug('Chared is not supported, reverting to Beautifull Soap')
-						sMyEnc = FindEncBS(sTest, sMyLang)
-					# Convert the darn thing
-					if sMyEnc not in ('utf_8', 'utf-8'):
-						# Make a backup
-						try:
-							MakeBackup(sTest)
-						except:
-							Log.Exception('Something went wrong creating a backup, file will not be converted!!! Check file permissions?')
-						else:
-							try:
-								ConvertFile(sTest, sMyEnc)
-							except:
-								Log.Exception('Something went wrong converting!!! Check file permissions?')
-								try:
-									RevertBackup(sTest)
-								except:
-									Log.Exception("Can't even revert the backup?!? I give up...")
-					else:
-						Log.Debug('The subtitle file named : %s is already encoded in utf-8, so skipping' %(sTest))
+						sMyLang = Locale.Language.Match(sMyLang)
+					FixFile(sTest, sMyLang)					
+
+#ged took out code here, and moved to a function
+
 				else:
 					Log.Debug('The subtitle file named : %s is already encoded in utf-8, so skipping' %(sTest))
 
@@ -159,7 +197,6 @@ def FindEncBS(myFile, lang):
 							Log.Debug('******* SNIFF *******')
 							Log.Debug("We don't know the default encodings for %s" %(lang))
 							Log.Debug('If you know this, then please go here: https://forums.plex.tv/index.php/topic/94864-rel-str2utf-8/ and tell me')
-
 				else:
 					# We got ISO
 					# Does result so far match our list?
@@ -173,7 +210,6 @@ def FindEncBS(myFile, lang):
 							Log.Debug('******* SNIFF *******')
 							Log.Debug("We don't know the default encodings for %s" %(lang))
 							Log.Debug('If you know this, then please go here: https://forums.plex.tv/index.php/topic/94864-rel-str2utf-8/ and tell me')
-
 		return sCurrentEnc
 	except UnicodeDecodeError:
 		Log.Debug('got unicode error with %s' %(myFile))
@@ -281,7 +317,6 @@ def MakeBackup(file):
 
 ######################################## Dummy to avoid bad logging ################################
 def ValidatePrefs():
-	print Prefs['PreferredCP'] + ': ' + Locale.Language.Match(Prefs['PreferredCP'])
 	return
 
 ######################################## Revert the backup, if enabled #############################

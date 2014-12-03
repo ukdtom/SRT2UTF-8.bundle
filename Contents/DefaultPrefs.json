@@ -6,6 +6,12 @@
 		"default": "true"
 	},
 	{
+		"id": "OSEnabled",
+		"label": "Support OpenSubtitles",
+		"type": "bool",
+		"default": "false"
+	},
+	{
 		"id": "Valid_Ext",
 		"label": "Valid Subtitle extentions, seperated with a space",
 		"type": "text",
