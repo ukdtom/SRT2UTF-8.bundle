@@ -11,7 +11,7 @@
 #
 
 ######################################### Global Variables #########################################
-PLUGIN_VERSION = '0.0.2.1'
+PLUGIN_VERSION = '0.0.2.2'
 
 ######################################### Imports ##################################################
 import os
@@ -57,7 +57,8 @@ class srt2utf8AgentTV(Agent.TV_Shows):
 	name = L('Srt2Utf-8') + ' (TV)'
 	languages = [Locale.Language.NoLanguage]
 	primary_provider = False
-	contributes_to = ['com.plexapp.agents.thetvdb', 'com.plexapp.agents.none']
+	contributes_to = ['com.plexapp.agents.thetvdb', 'com.plexapp.agents.themoviedb']
+
 	# Return a dummy object to satisfy the framework
 	def search(self, results, media, lang):
 		results.Append(MetadataSearchResult(id='null', score = 100))
