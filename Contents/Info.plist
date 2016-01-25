@@ -6,7 +6,7 @@
 	<string>com.plexapp.agents.srt2utf8</string>
 	<key>PlexAgentAttributionText</key>
 	<string>
-		The main purpose of the &lt;a href=&quot;http://forums.plex.tv/index.php/topic/94864-rel-str2utf-8/&quot;&gt;srt2utf-8&lt;/a&gt; agent is to make sure, &lt;br/&gt;
+		The main purpose of the &lt;a href=&quot;http://forums.plex.tv/discussion/94864/rel-str2utf-8/p1#top&quot;&gt;srt2utf-8&lt;/a&gt; agent is to make sure, &lt;br/&gt;
 		that all not embedded subtitle files are encoded as UTF-8.&lt;br/&gt; For the manual, please look &lt;a href=&quot;https://github.com/ukdtom/SRT2UTF-8.bundle/wiki/&quot;&gt;here&lt;/a&gt;	</string>
 	<key>PlexFrameworkVersion</key>
 	<string>2</string>

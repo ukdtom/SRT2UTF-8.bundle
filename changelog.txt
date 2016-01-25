@@ -1,3 +1,10 @@
+v0.0.2.2
+- Added The Movie DB to TV-Shows
+- Corrected link in the Settings/Info to the forum thread
+
+v0.0.2.1
+- now supports Brazilian Portuguese srt's
+
 v0.0.2.0
 -	Added support for OpenSubtitles Agent
 	(Do make sure, that this plug-in is the latest in the agent order)
