@@ -1,3 +1,6 @@
+v0.0.2.3
+- Fixed #32 : KeyError: 'xx'
+
 v0.0.2.2
 - Added The Movie DB to TV-Shows
 - Corrected link in the Settings/Info to the forum thread

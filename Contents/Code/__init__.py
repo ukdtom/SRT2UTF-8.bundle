@@ -115,13 +115,13 @@ def FixFile(sFile, sMyLang):
 		# Make a backup
 		try:
 			MakeBackup(sFile)
-		except:
-			Log.Exception('Something went wrong creating a backup, file will not be converted!!! Check file permissions?')
+		except Exception, e:
+			Log.Exception('Something went wrong creating a backup, file will not be converted!!! %s' %(str(e)))
 		else:
 			try:
 				ConvertFile(sFile, sMyEnc)
-			except:
-				Log.Exception('Something went wrong converting!!! Check file permissions?')
+			except Exception, e:
+				Log.Exception('Something went wrong converting!!! %s' %(str(e)))
 				try:
 					RevertBackup(sFile)
 				except:
