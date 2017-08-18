@@ -11,7 +11,7 @@
 #
 
 ######################################### Global Variables #########################################
-PLUGIN_VERSION = '0.0.2.2'
+PLUGIN_VERSION = '0.0.2.3'
 
 ######################################### Imports ##################################################
 import os
@@ -115,13 +115,13 @@ def FixFile(sFile, sMyLang):
 		# Make a backup
 		try:
 			MakeBackup(sFile)
-		except:
-			Log.Exception('Something went wrong creating a backup, file will not be converted!!! Check file permissions?')
+		except Exception, e:
+			Log.Exception('Something went wrong creating a backup, file will not be converted!!! %s' %(str(e)))
 		else:
 			try:
 				ConvertFile(sFile, sMyEnc)
-			except:
-				Log.Exception('Something went wrong converting!!! Check file permissions?')
+			except Exception, e:
+				Log.Exception('Something went wrong converting!!! %s' %(str(e)))
 				try:
 					RevertBackup(sFile)
 				except:
@@ -285,9 +285,9 @@ def sIsValid(sMyDir, sMediaFilename, sSubtitleFilename):
 		if (sFileExtension.upper() in lValidList):
 			#It's a subtitle file, but is it for the mediafile?
 			# Get filename without ext. of the media
-			myMedia, myMediaExt = os.path.splitext(os.path.basename(sMediaFilename))
-			# Get the ext of the SubtitleFile
-			sSRTName2, sFileExtension = os.path.splitext(sFileName)
+			myMedia = os.path.splitext(os.path.basename(sMediaFilename))[0]
+			# Get the name of the SubtitleFile
+			sSRTName2 = os.path.splitext(sFileName)[0]
 			if sFileName == myMedia:
 				Log.Debug('Found a valid subtitle file named "%s"' %(sSubtitleFilename))
 				sSource = sMyDir + '/' + sSubtitleFilename
@@ -296,6 +296,14 @@ def sIsValid(sMyDir, sMediaFilename, sSubtitleFilename):
 				Log.Debug('Found a valid subtitle file named "%s"' %(sSubtitleFilename))
 				sSource = sMyDir + '/' + sSubtitleFilename
 				return sSource
+			elif myMedia == sSRTName2.replace('.forced',''):
+				Log.Debug('Found a valid subtitle file named "%s"' %(sSubtitleFilename))
+				sSource = sMyDir + '/' + sSubtitleFilename
+				return sSource	
+			elif myMedia == os.path.splitext(sSRTName2.replace('.forced',''))[0]:
+				Log.Debug('Found a valid subtitle file named "%s"' %(sSubtitleFilename))
+				sSource = sMyDir + '/' + sSubtitleFilename
+				return sSource						
 			else:
 				return 'null'
 		else:
