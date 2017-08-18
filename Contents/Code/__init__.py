@@ -299,7 +299,11 @@ def sIsValid(sMyDir, sMediaFilename, sSubtitleFilename):
 			elif myMedia == sSRTName2.replace('.forced',''):
 				Log.Debug('Found a valid subtitle file named "%s"' %(sSubtitleFilename))
 				sSource = sMyDir + '/' + sSubtitleFilename
-				return sSource			
+				return sSource	
+			elif myMedia == os.path.splitext(sSRTName2.replace('.forced',''))[0]:
+				Log.Debug('Found a valid subtitle file named "%s"' %(sSubtitleFilename))
+				sSource = sMyDir + '/' + sSubtitleFilename
+				return sSource						
 			else:
 				return 'null'
 		else:
