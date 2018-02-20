@@ -114,7 +114,7 @@ def GetOSSrt(part):
                     os.path.join(
                         OSDir,
                         langCode),
-                    topdown=False):
+                        topdown=False):
                     # Walk the directory
                     for sSrtName in files2:
                         sMySrtFile = os.path.join(
