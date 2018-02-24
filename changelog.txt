@@ -1,3 +1,7 @@
+v0.0.2.4:
+- Added support for pt-BR language
+  - Note, that in the Preferences of this plug-in, default should be set to Portuguese
+
 v0.0.2.3
 - Fixed #32 : KeyError: 'xx'
 
