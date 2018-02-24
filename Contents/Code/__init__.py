@@ -27,7 +27,7 @@ from chared.detector import list_models, get_model_path, EncodingDetector
 
 
 # ############################ Global Variables ###################
-PLUGIN_VERSION = '0.0.2.3'
+PLUGIN_VERSION = '0.0.2.4'
 
 
 def Start():
