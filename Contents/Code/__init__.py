@@ -122,7 +122,7 @@ def GetOSSrt(part):
                             langCode,
                             sSrtName)
                         # Get the ext of the SubtitleFile
-                        sFileName = os.path.splitext(sSrtName)[0]
+                        sFileName, sFileExtension = os.path.splitext(sSrtName)
                         # Is this a backup file?
                         if sFileExtension != '.Srt2Utf-8':
                             # Nope, so go ahead
