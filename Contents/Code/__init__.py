@@ -193,13 +193,16 @@ def GetFiles(part):
             sSrtName = sSrtName.decode('utf-8')
             sTest = sIsValid(sMyDir, sFile, sSrtName)
             if sTest != 'null':
-                # Got a language code in the file-name?
+                # Got a language code in the file-name? If not, add language code to file-name.
                 sMyLang = sGetFileLang(sTest)
                 if sMyLang == 'xx':
+                    Log.Debug('No language code detected for the file: %s' %(sTest))
                     sMyLang = GetUsrEncPref()
                     sMyLang = Locale.Language.Match(sMyLang)
-                    RenameSubtitlesWithLanguage(sTest, sMyLang)
-                
+
+                    if Prefs['Add_Language_Code']:
+                        sTest = RenameSubtitlesWithLanguage(sTest, sMyLang)
+                    
                 # We got a valid subtitle file here
                 if not bIsUTF_8(sTest):
                     FixFile(sTest, sMyLang)
@@ -212,14 +215,11 @@ def GetFiles(part):
                     Log.Debug(strLog)
 
 def RenameSubtitlesWithLanguage(myFile, sMyLang):
-    if Prefs['ConversionResult']:
-        fileName, fileExtension = os.path.splitext(myFile)
-        sTarget = fileName + ‘.’ + sMyLang + fileExtension
-        Log.Debug('Original file %s renamed to %s' %(myFile, sTarget))
-        os.rename(myFile, sTarget)
-        return sTarget
-    else:
-        return myFile
+    fileName, fileExtension = os.path.splitext(myFile)
+    sTarget = fileName + '.' + sMyLang + fileExtension
+    os.rename(myFile, sTarget)
+    Log.Debug('Renaming: From %s to %s' %(myFile, sTarget))
+    return sTarget
 
 
 def ConvertFile(myFile, enc):

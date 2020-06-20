@@ -46,6 +46,12 @@
 			"Uighur","Ukrainian","Urdu","Uzbek","Venda","Vietnamese","Walloon","Welsh","Wolof",
 			"Xhosa","Yiddish","Yoruba","Zhuang","Zulu"],
 		"default": "None"
+	},
+	{
+		"id": "Add_Language_Code",
+		"label": "Add language code to subtitle files if not present (You must select your preferred language before enabling this setting)",
+		"type": "bool",
+		"default": "false"
 	}
-	
+
 ]
