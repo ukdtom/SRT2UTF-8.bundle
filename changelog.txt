@@ -1,3 +1,7 @@
+v0.0.3.0:
+- Add new setting to optionally turn off the changing of subtitle file encoding to UTF-8.
+- Add new setting to optionally rename subtitle files by appending the user's preferred language code to the end, if not there already.
+
 v0.0.2.5:
 - Fixed #40
 

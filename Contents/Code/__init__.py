@@ -1,9 +1,10 @@
-# Convert sidecar subtitle files files into UTF-8 format
+# Convert sidecar subtitle files files into UTF-8 format, and add language code to end of subtitle file names
 # Created by dane22, a Plex community member
 #
 # Code contributions made by the following:
 # srazer, also a Plex community member
 # jmichiel, also a Plex community member
+# haarismemon, also a Plex community member
 #
 
 # TODO:
@@ -27,7 +28,7 @@ from chared.detector import list_models, get_model_path, EncodingDetector
 
 
 # ############################ Global Variables ###################
-PLUGIN_VERSION = '0.0.2.5'
+PLUGIN_VERSION = '0.0.3'
 
 
 def Start():
