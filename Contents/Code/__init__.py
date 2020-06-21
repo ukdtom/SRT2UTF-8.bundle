@@ -125,17 +125,19 @@ def GetOSSrt(part):
                         sFileName, sFileExtension = os.path.splitext(sSrtName)
                         # Is this a backup file?
                         if sFileExtension != '.Srt2Utf-8':
-                            # Nope, so go ahead
-                            Log.Debug('Checking file: %s' % (sMySrtFile))
-                            if not bIsUTF_8(sMySrtFile):
-                                strLogEntry = ''.join((
-                                    '****** File is not UTF-8',
-                                    '...Need to fix it *******'
-                                ))
-                                Log.Debug(strLogEntry)
-                                FixFile(sMySrtFile, langCode)
-                            else:
-                                Log.Debug('File is okay')
+                            # Only fix the subtitle file encoding if setting is enabled
+                            if Prefs['Fix_Subtitle_Encoding']:
+                                # Nope, so go ahead
+                                Log.Debug('Checking file: %s' % (sMySrtFile))
+                                if not bIsUTF_8(sMySrtFile):
+                                    strLogEntry = ''.join((
+                                        '****** File is not UTF-8',
+                                        '...Need to fix it *******'
+                                    ))
+                                    Log.Debug(strLogEntry)
+                                    FixFile(sMySrtFile, langCode)
+                                else:
+                                    Log.Debug('File is okay')
 
 
 def FixFile(sFile, sMyLang):
@@ -202,17 +204,19 @@ def GetFiles(part):
 
                     if Prefs['Add_Language_Code']:
                         sTest = RenameSubtitlesWithLanguage(sTest, sMyLang)
-                    
-                # We got a valid subtitle file here
-                if not bIsUTF_8(sTest):
-                    FixFile(sTest, sMyLang)
-                else:
-                    strLog = ''.join((
-                        'The subtitle file named : ',
-                        '%s' % (sTest),
-                        ' is already encoded in utf-8, so skipping'
-                    ))
-                    Log.Debug(strLog)
+
+                # Only fix the subtitle file encoding if setting is enabled
+                if Prefs['Fix_Subtitle_Encoding']:
+                    # We got a valid subtitle file here
+                    if not bIsUTF_8(sTest):
+                        FixFile(sTest, sMyLang)
+                    else:
+                        strLog = ''.join((
+                            'The subtitle file named : ',
+                            '%s' % (sTest),
+                            ' is already encoded in utf-8, so skipping'
+                        ))
+                        Log.Debug(strLog)
 
 def RenameSubtitlesWithLanguage(myFile, sMyLang):
     fileName, fileExtension = os.path.splitext(myFile)

@@ -1,5 +1,11 @@
 [
 	{
+		"id": "Fix_Subtitle_Encoding",
+		"label": "Fix Subtitle Encoding (disabling this means this plugin will no longer do its main purpose)",
+		"type": "bool",
+		"default": "true"
+	},
+	{
 		"id": "Make_Backup",
 		"label": "Create backup",
 		"type": "bool",
