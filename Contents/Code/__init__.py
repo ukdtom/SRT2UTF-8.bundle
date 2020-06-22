@@ -220,11 +220,14 @@ def GetFiles(part):
                         Log.Debug(strLog)
 
 def RenameSubtitlesWithLanguage(myFile, sMyLang):
-    fileName, fileExtension = os.path.splitext(myFile)
-    sTarget = fileName + '.' + sMyLang + fileExtension
-    os.rename(myFile, sTarget)
-    Log.Debug('Renaming: From %s to %s' %(myFile, sTarget))
-    return sTarget
+    if Prefs['PreferredCP'] != 'None' and sMyLang != 'xx':
+        fileName, fileExtension = os.path.splitext(myFile)
+        sTarget = fileName + '.' + sMyLang + fileExtension
+        os.rename(myFile, sTarget)
+        Log.Debug('Renaming: From %s to %s' %(myFile, sTarget))
+        return sTarget
+    else:
+        return myFile
 
 
 def ConvertFile(myFile, enc):

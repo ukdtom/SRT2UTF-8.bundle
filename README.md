@@ -16,13 +16,15 @@ https://github.com/ukdtom/SRT2UTF-8.bundle/wiki
 
 ## Note
 
-Please choose your preferred language before enabling the renaming of subtitle files. If the preferred language is set to None and the renaming is enabled, the language code that is appended will be 'xx'.
+The renaming of subtitle files is disabled by default. This can be enabled in the Agent's settings for your Plex Server.
+
+Please select your preferred language before enabling the renaming of subtitle files. If the renaming is enabled and the language is not selected, the subtitle file names will remain unchanged.
 
 WARNING!!!!!
 
-It is important that you read the Wiki, since this agent will do what no other agent does in the Plex Universe, and that's changing your media files
+It is important that you read the Wiki, since this agent will do what no other agent does in the Plex Universe, and that's changing your media files.
 
-Use at own risk
+Use at own risk.
 
 ## License
 
