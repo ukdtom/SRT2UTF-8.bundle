@@ -20,6 +20,8 @@ The renaming of subtitle files is disabled by default. This can be enabled in th
 
 Please select your preferred language before enabling the renaming of subtitle files. If the renaming is enabled and the language is not selected, the subtitle file names will remain unchanged.
 
+Subtitle file renaming is also impacted by the "Remove the original subtitle file" option which is enabled by default. If disabled, the agent will copy the subtitle file instead of moving (renaming) it, leaving the original file in place.
+
 WARNING!!!!!
 
 It is important that you read the Wiki, since this agent will do what no other agent does in the Plex Universe, and that's changing your media files.
