@@ -223,8 +223,14 @@ def RenameSubtitlesWithLanguage(myFile, sMyLang):
     if Prefs['PreferredCP'] != 'None' and sMyLang != 'xx':
         fileName, fileExtension = os.path.splitext(myFile)
         sTarget = fileName + '.' + sMyLang + fileExtension
-        os.rename(myFile, sTarget)
-        Log.Debug('Renaming: From %s to %s' %(myFile, sTarget))
+
+        if Prefs['Remove_Original_File']:
+            os.rename(myFile, sTarget)
+            Log.Debug('Renaming: From %s to %s' %(myFile, sTarget))
+        else:
+            shutil.copyfile(myFile, sTarget)
+            Log.Debug('Copying: From %s to %s' %(myFile, sTarget))
+
         return sTarget
     else:
         return myFile

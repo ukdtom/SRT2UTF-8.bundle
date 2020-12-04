@@ -58,6 +58,12 @@
 		"label": "Add language code to subtitle files if not present (You must select your preferred language before enabling this setting)",
 		"type": "bool",
 		"default": "false"
+	},
+	{
+		"id": "Remove_Original_File",
+		"label": "Remove the original subtitle file after adding the language code (Only takes effect if the \"Add language code\" option is also enabled)",
+		"type": "bool",
+		"default": "true"
 	}
 
 ]
